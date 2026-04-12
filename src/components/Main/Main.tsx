@@ -1,7 +1,7 @@
-import { create } from "zustand";
 import { motion, type Variants } from "framer-motion";
 import { Globe, UserCheck } from "lucide-react";
 import type { FunctionComponent } from "react";
+import { useStore } from "../../store/useStore";
 
 // interface MainProps {}
 
@@ -15,19 +15,10 @@ const cardVariants: Variants = {
   },
 };
 
-interface StoreState {
-  count: number;
-  increment: () => void;
-}
-
-const useStore = create<StoreState>((set) => ({
-  count: 0,
-  increment: () => set((state) => ({ count: state.count + 1 })),
-}));
-
 // const Main: FunctionComponent<MainProps> = () => {
 const Main: FunctionComponent = () => {
-  const { count, increment } = useStore();
+  const { count, increment, decrement, reset } = useStore((state) => state);
+
   return (
     <div className="bg-black min-h-screen w-full py-10 ">
       <span className="text-white">{count}</span>
@@ -37,6 +28,19 @@ const Main: FunctionComponent = () => {
       >
         Increment
       </button>
+      <button
+        onClick={decrement}
+        className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+      >
+        Increment
+      </button>
+      <button
+        onClick={reset}
+        className="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
+      >
+        Reset
+      </button>
+
       <div className="max-w-[1200px] w-full mx-auto px-4">
         {/* THIS IS YOUR ONLY GRID PARENT */}
         <motion.div
