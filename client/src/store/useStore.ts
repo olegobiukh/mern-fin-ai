@@ -1,6 +1,5 @@
 
 import { create } from "zustand";
-
 interface Stats {
   totalAssets: string;
   occupancyRate: string;

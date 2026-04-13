@@ -1,7 +1,7 @@
-import { useEffect, type FunctionComponent } from "react";
-import { useStore } from "../../store/useStore";
+import { type FunctionComponent } from "react";
 import { motion, type Variants } from "framer-motion";
 import { Globe, UserCheck } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 
 const cardVariants: Variants = {
   hidden: { opacity: 0, y: 20 },
@@ -13,18 +13,21 @@ const cardVariants: Variants = {
 };
 
 const Stats: FunctionComponent = () => {
-  const { stats, isLoading, error, fetchStats } = useStore((state) => state);
-
-  useEffect(() => {
-    fetchStats();
-  }, []);
-
-  useEffect(() => {
-    console.log(stats);
-  }, [stats]);
+  const {
+    data: stats,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["hospitalStats"], // This is the 'name' of the data in the cache
+    queryFn: async () => {
+      const response = await fetch("http://localhost:5000/api/stats");
+      if (!response.ok) throw new Error("Network response was not ok");
+      return response.json();
+    },
+  });
 
   if (isLoading) return <div className="text-white">Loading data...</div>;
-  if (error) return <div className="text-red-500">Error: {error}</div>;
+  if (error) return <div className="text-red-500">Error: {error.message}</div>;
 
   return (
     <>
